@@ -2,6 +2,10 @@
 
 弥补 编程猫Nemo/点个猫 的不合理特性，功能增强等特性(｡･ω･｡)
 
+### 编译
+
+本项目使用 [AndroidIDE](https://github.com/AndroidIDEOfficial/AndroidIDE) 进行开发，暂时不知道能否在 Android Studio 中成功编译，有待测试
+
 ### 截图
 
 ![配置页面](.github/1.jpg)
