@@ -1,0 +1,38 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="关于">
+        
+        <Preference
+            android:key="about"
+            android:title="关于"
+            android:summary="关于 FuckMaoNemo" />
+        
+        <Preference
+            android:title="作者"
+            android:summary="编程猫 @满月叶\nGitHub @MoonLeeeaf" />
+    
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="网络">
+        
+        <SwitchPreference
+            android:key="fuck_40x"
+            android:title="阻止服务端响应 40x 码"
+            android:summary="启用此开关后，将可以：\n拦截 401 码强制登出账号\n强制浏览已封禁账号的资料卡\n评论接口检测\n其他作用" />
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="作品">
+    
+         <SwitchPreference
+            android:key="fuck_fcm"
+            android:title="绕过防沉迷"
+            android:summary="滞空防沉迷检测方法的调用实现无伤速通破解防沉迷，无需 Player 链接" />
+    
+         <SwitchPreference
+            android:key="force_rework"
+            android:title="强制显示再创作"
+            android:enabled="false"
+            android:summary="使作品的 再创作 按钮永远显示，即使作品并未设置为开放源代码（未制作QWQ）" />
+        
+    </PreferenceCategory>
+</PreferenceScreen>
