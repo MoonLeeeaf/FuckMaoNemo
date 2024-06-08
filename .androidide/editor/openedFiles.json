@@ -4,14 +4,14 @@
       "file": "/storage/emulated/0/铃芽の文件/Projects/FuckMaoNemo/app/src/main/res/xml/config.xml",
       "selection": {
         "end": {
-          "column": 7,
-          "index": 1062,
-          "line": 30
+          "column": 102,
+          "index": 683,
+          "line": 19
         },
         "start": {
-          "column": 7,
-          "index": 1062,
-          "line": 30
+          "column": 102,
+          "index": 683,
+          "line": 19
         }
       }
     },
@@ -19,29 +19,14 @@
       "file": "/storage/emulated/0/铃芽の文件/Projects/FuckMaoNemo/app/src/main/java/io/github/moonleeeaf/fuckmaonemo/Hook.java",
       "selection": {
         "end": {
-          "column": 39,
-          "index": 3614,
-          "line": 83
+          "column": 31,
+          "index": 3660,
+          "line": 84
         },
         "start": {
-          "column": 39,
-          "index": 3614,
-          "line": 83
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/铃芽の文件/Projects/FuckMaoNemo/app/build.gradle",
-      "selection": {
-        "end": {
-          "column": 23,
-          "index": 273,
-          "line": 14
-        },
-        "start": {
-          "column": 23,
-          "index": 273,
-          "line": 14
+          "column": 31,
+          "index": 3660,
+          "line": 84
         }
       }
     }

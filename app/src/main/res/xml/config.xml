@@ -17,7 +17,7 @@
         <SwitchPreference
             android:key="fuck_40x"
             android:title="阻止服务端响应 40x 码"
-            android:summary="启用此开关后，将可以：\n拦截 401 码强制登出账号\n强制浏览已封禁账号的资料卡\n评论接口检测\n其他作用" />
+            android:summary="启用此开关后，将可以：\n拦截 401 码强制登出账号\n强制浏览已封禁账号的资料卡\n评论接口检测\n其他作用\n现在不再弹出 Toast 提示" />
         
         <SwitchPreference
             android:key="no_records"
