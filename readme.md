@@ -6,7 +6,7 @@
 
 0. 已安装 LSPosed 框架(由于使用了 XSharedPreferences，故对免 Root 的 Xposed 框架不支持？)
 
-1. 从 [Releases](./releases/) 或 [Actions](./actions/) 下载（注：签名不同，除非你有核心破解），普通用户建议下载 Releases 版本
+1. 从 [Releases](../../releases/) 或 [Actions](../../actions/) 下载（注：签名不同，除非你有核心破解），普通用户建议下载 Releases 版本
 
 2. 安装并激活此模块，作用域选择 点个猫(com.codemao.nemo)，强制停止
 
@@ -14,7 +14,7 @@
 
 4. 打开点个猫，然后 Enjoy it (≧▽≦)
 
-5. 使用过程中存在任何问题欢迎提到 [Issues](./issues/)（需要 GitHub 账号） 或者是我的发布页[评论区](https://shequ.codemao.cn/work/227492197)（需要编程猫账号），建议点个猫版本为 4.5.0
+5. 使用过程中存在任何问题欢迎提到 [Issues](../../issues/)（需要 GitHub 账号） 或者是我的发布页[评论区](https://shequ.codemao.cn/work/227492197)（需要编程猫账号），建议点个猫版本为 4.5.0
 
 （小声BB：我相信各位猫友大多都不晓得这些东西，因此，它可能并不适合你）
 
