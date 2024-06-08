@@ -1,6 +1,7 @@
 package io.github.moonleeeaf.fuckmaonemo;
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -11,10 +12,16 @@ import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import java.lang.reflect.Method;
+import java.net.Proxy;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Hook implements IXposedHookLoadPackage {
     private static boolean isHooked = false;
     private XSharedPreferences xsp;
+    private ClassLoader classLoader;
+    private int nohengheng;
+    private int aaaa;
     
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam param) throws Throwable {
@@ -29,15 +36,15 @@ public class Hook implements IXposedHookLoadPackage {
                     protected void afterHookedMethod(MethodHookParam mParam) throws Throwable {
                         super.afterHookedMethod(mParam);
                         Object initApp = XposedHelpers.getObjectField(mParam.thisObject, "mInitialApplication");
-                        hook(param, initApp.getClass().getClassLoader());
+                        classLoader = initApp.getClass().getClassLoader();
+                        hook(param);
                     }
-                    
                 }
             );
         }
     }
     
-    public static Method getMethod(Class clazz, String name, Class... args) throws NoSuchMethodException {
+    public static Method getMethod(Class clazz, String name, Class<?>... args) throws NoSuchMethodException {
         return clazz.getDeclaredMethod(name, args);
     }
    
@@ -45,18 +52,19 @@ public class Hook implements IXposedHookLoadPackage {
         return (Application) XposedHelpers.callStaticMethod(Class.forName("android.app.ActivityThread"), "currentApplication");
     }
     
-    public void hook(XC_LoadPackage.LoadPackageParam param, ClassLoader classLoader) throws Exception {
+    public void hook(XC_LoadPackage.LoadPackageParam param) throws Exception {
         if (isHooked) return;
         else isHooked = true;
         
-        int nohengheng = 0;
+        nohengheng = 0;
+        aaaa = 0;
         
         xsp = new XSharedPreferences("io.github.moonleeeaf.fuckmaonemo", "config");
         
         XposedBridge.log("[FuckMaoNemo] 注入中...");
         
         // 拦截40x码
-        if (xsp.getBoolean("fuck_40x", false)) {
+        load("fuck_40x", () -> {
             XposedBridge.log("[FuckMaoNemo] Hook_拦截40x码");
             XposedBridge.hookMethod(
                 getMethod(
@@ -72,53 +80,95 @@ public class Hook implements IXposedHookLoadPackage {
                         if(code >= 400 && code <500) {
                             Object rawRes = XposedHelpers.getObjectField(res, "rawResponse");
                             XposedHelpers.setIntField(rawRes, "code", 200);
-                            XposedBridge.log("[FuckMaoNemo] 拦截响应 40x 码");
-                            String t = "";
-                            switch (code){
-                                case 401:
-                                    t = "已拦截异常登出";
-                                    break;
-                                case 422:
-                                    t = "已拦截封号页面替换资料卡";
-                                    break;
-                                case 405:
-                                    t = "评论接口被禁止";
-                                    break;
-                                default:
-                                    t = "未知拦截，响应码为 " + code;
-                            }
+                            XposedBridge.log("[FuckMaoNemo] 拦截响应 " + code + " 码");
+                            String t = "服务端返回响应码 " + code;
                             Toast.makeText(getApplication(), "[FuckMaoNemo] " + t, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
             );
-            nohengheng++;
-        }
+        });
         
         // 绕过防沉迷
-        if (xsp.getBoolean("fuck_fcm", false)) {
+        load("fuck_fcm", () -> {
             XposedBridge.log("[FuckMaoNemo] Hook_绕过防沉迷");
+            methodToVoid(getMethod(
+                XposedHelpers.findClass("com.codemao.nemo.activity.WorkDetailActivity", classLoader),
+                "checkAntiAddictionState",
+                null
+            ));
+        });
+        
+        // 强制显示再创作按钮
+        load("force_show_rework", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_强制显示再创作按钮");
             XposedBridge.hookMethod(
                 getMethod(
-                    XposedHelpers.findClass("com.codemao.nemo.activity.WorkDetailActivity", classLoader),
-                    "checkAntiAddictionState",
+                    XposedHelpers.findClass("com.codemao.creativecenter.utils.bcm.bean.CreativeWorkDetailInfo", classLoader),
+                    "isFork_enable",
                     null
                 ),
                 new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
-                        XposedBridge.log("[FuckMaoNemo] 拦截防沉迷方法调用");
-                        return null;
+                        return true;
                     }
-                    
                 }
             );
-            nohengheng++;
-        }
+        });
+        
+        // 不追踪
+        load("no_records", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_不追踪");
+            methodToVoid(getMethod(
+                XposedHelpers.findClass("cn.codemao.android.stat.CodeMaoStat", classLoader),
+                "recordEvent",
+                String.class,
+                Map.class
+            ));
+        });
+        
+        // 反防抓包
+        load("fuck_no_proxy", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_反防抓包");
+            // TODO：其实可以从 OkHttp 底层去Hook的
+            methodToVoid(
+                getMethod(
+                    XposedHelpers.findClass("okhttp3.OkHttpClient$Builder", classLoader),
+                    "proxy",
+                    Proxy.class
+                )
+            );
+        });
         
         XposedBridge.log("[FuckMaoNemo] 执行完毕");
         
-        Toast.makeText(getApplication(), "[FuckMaoNemo] 加载成功 (≧▽≦)\n" + nohengheng + " 个功能已加载", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplication(), "[FuckMaoNemo] 加载成功 (≧▽≦)\n" + nohengheng + " 个功能加载成功, " + aaaa + " 个失败", Toast.LENGTH_LONG).show();
+    }
+    
+    public interface Callback {
+        public void onCallback() throws Exception;
+    }
+    
+    public void methodToVoid(Method m) {
+        XposedBridge.hookMethod(m, new XC_MethodReplacement() {
+            @Override
+            protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
+                return null;
+            }
+        });
+    }
+    
+    public void load(String pref, Callback cb) {
+        if (xsp.getBoolean(pref, false)) {
+            try {
+                cb.onCallback();
+                nohengheng++;
+            } catch (Exception e) {
+                XposedBridge.log(e);
+                aaaa++;
+            }
+        }
     }
     
 }
