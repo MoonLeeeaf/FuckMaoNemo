@@ -81,8 +81,9 @@ public class Hook implements IXposedHookLoadPackage {
                             Object rawRes = XposedHelpers.getObjectField(res, "rawResponse");
                             XposedHelpers.setIntField(rawRes, "code", 200);
                             XposedBridge.log("[FuckMaoNemo] 拦截响应 " + code + " 码");
-                            String t = "服务端返回响应码 " + code;
-                            Toast.makeText(getApplication(), "[FuckMaoNemo] " + t, Toast.LENGTH_SHORT).show();
+                            String t = "响应码 " + code;
+                            if (code != 401)
+                               Toast.makeText(getApplication(), "[FuckMaoNemo] " + t, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
