@@ -4,7 +4,7 @@
 
 ### 使用
 
-0. 已安装 LSPosed 框架(由于使用了 XSharedPreferences，故对免 Root 的 Xposed 框架不支持？)
+0. 建议点个猫版本为 4.3.4，已安装 LSPosed 框架(由于使用了 XSharedPreferences，故免 Root 的 Xposed 框架貌似无法正常运作)
 
 1. 从 [Releases](../../releases/) 或 [Actions](../../actions/) 下载（注：签名不同，除非你有核心破解），普通用户建议下载 Releases 版本
 
@@ -14,7 +14,7 @@
 
 4. 打开点个猫，然后 Enjoy it (≧▽≦)
 
-5. 使用过程中存在任何问题欢迎提到 [Issues](../../issues/)（需要 GitHub 账号） 或者是我的发布页[评论区](https://shequ.codemao.cn/work/227492197)（需要编程猫账号），建议点个猫版本为 4.5.0
+5. 使用过程中存在任何问题欢迎提到 [Issues](../../issues/)（需要 GitHub 账号） 或者是我的发布页[评论区](https://shequ.codemao.cn/work/227492197)（需要编程猫账号）
 
 （小声BB：我相信各位猫友大多都不晓得这些东西，因此，它可能并不适合你）
 
