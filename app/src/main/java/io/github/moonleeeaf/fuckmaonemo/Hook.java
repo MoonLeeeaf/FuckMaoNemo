@@ -82,7 +82,16 @@ public class Hook implements IXposedHookLoadPackage {
                             XposedHelpers.setIntField(rawRes, "code", 200);
                             XposedBridge.log("[FuckMaoNemo] 拦截响应 " + code + " 码");
                             String t = "响应码 " + code;
-                            // Toast.makeText(getApplication(), "[FuckMaoNemo] " + t, Toast.LENGTH_SHORT).show();
+                            switch (code) {
+                                case 401:
+                                    t = "已阻止异常登出";
+                                    break;
+                                case 405:
+                                case 422:
+                                    t = "API 访问被拒绝，评论区或者已封禁账号？";
+                                    break;
+                            }
+                            Toast.makeText(getApplication(), "[FuckMaoNemo] " + t, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
