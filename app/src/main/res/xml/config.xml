@@ -28,7 +28,7 @@
         <SwitchPreference
             android:key="fuck_update"
             android:title="屏蔽更新"
-            android:summary="此功能会让整个更新功能不可用，若已经收到更新提示请先清理 shared_prefs 才可完全生效" />
+            android:summary="主页不会弹更新对话框" />
         
         <SwitchPreference
             android:key="fuck_no_proxy"
