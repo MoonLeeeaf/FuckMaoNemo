@@ -2,6 +2,7 @@ package io.github.moonleeeaf.fuckmaonemo;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -153,22 +154,13 @@ public class Hook implements IXposedHookLoadPackage {
         // 屏蔽更新
         load("fuck_update", () -> {
             XposedBridge.log("[FuckMaoNemo] Hook_屏蔽更新");
-            XposedBridge.hookMethod(
+            methodToVoid(
                 getMethod(
-                    XposedHelpers.findClass("cn.codemao.android.update.CodemaoUpdate$Builder", classLoader),
-                    "setEnv",
-                    int.class
-                ),
-                new XC_MethodHook(){
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
-                        XposedHelpers.setStaticObjectField(
-                            XposedHelpers.findClass("cn.codemao.android.update.util.UpdateConstants", classLoader),
-                            "UPDATE_URL",
-                            "http://114.514.1.1"
-                        );
-                    }
-                }
+                    XposedHelpers.findClass("com.codemao.nemo.sdk.update.NetChangeReceiver", classLoader),
+                    "onReceive",
+                    Context.class,
+                    Intent.class
+                )
             );
         });
         
