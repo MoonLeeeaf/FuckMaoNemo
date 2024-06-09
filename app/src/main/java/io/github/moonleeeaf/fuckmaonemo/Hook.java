@@ -150,6 +150,28 @@ public class Hook implements IXposedHookLoadPackage {
             );
         });
         
+        // 屏蔽更新
+        load("fuck_update", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_屏蔽更新");
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("cn.codemao.android.update.CodemaoUpdate$Builder", classLoader),
+                    "setEnv",
+                    int.class
+                ),
+                new XC_MethodHook(){
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam arg0) throws Throwable {
+                        XposedHelpers.setStaticObjectField(
+                            XposedHelpers.findClass("cn.codemao.android.update.util.UpdateConstants", classLoader),
+                            "UPDATE_URL",
+                            "http://114.514.1.1"
+                        );
+                    }
+                }
+            );
+        });
+        
         XposedBridge.log("[FuckMaoNemo] 执行完毕");
         
         Toast.makeText(getApplication(), "[FuckMaoNemo] 加载成功 (≧▽≦)\n" + nohengheng + " 个功能加载成功, " + aaaa + " 个失败", Toast.LENGTH_LONG).show();

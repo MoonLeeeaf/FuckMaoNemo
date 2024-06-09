@@ -1,20 +1,50 @@
 {
   "allFiles": [
     {
+      "file": "/storage/emulated/0/铃芽の文件/Projects/FuckMaoNemo/app/src/main/res/xml/config.xml",
+      "selection": {
+        "end": {
+          "column": 15,
+          "index": 519,
+          "line": 17
+        },
+        "start": {
+          "column": 15,
+          "index": 519,
+          "line": 17
+        }
+      }
+    },
+    {
       "file": "/storage/emulated/0/铃芽の文件/Projects/FuckMaoNemo/app/src/main/java/io/github/moonleeeaf/fuckmaonemo/Hook.java",
       "selection": {
         "end": {
-          "column": 51,
-          "index": 3944,
-          "line": 90
+          "column": 28,
+          "index": 5956,
+          "line": 146
         },
         "start": {
-          "column": 51,
-          "index": 3944,
-          "line": 90
+          "column": 28,
+          "index": 5956,
+          "line": 146
+        }
+      }
+    },
+    {
+      "file": "/storage/emulated/0/铃芽の文件/Projects/FuckMaoNemo/app/build.gradle",
+      "selection": {
+        "end": {
+          "column": 22,
+          "index": 272,
+          "line": 14
+        },
+        "start": {
+          "column": 22,
+          "index": 272,
+          "line": 14
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/铃芽の文件/Projects/FuckMaoNemo/app/src/main/java/io/github/moonleeeaf/fuckmaonemo/Hook.java"
+  "selectedFile": "/storage/emulated/0/铃芽の文件/Projects/FuckMaoNemo/app/src/main/res/xml/config.xml"
 }

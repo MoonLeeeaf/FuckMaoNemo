@@ -17,12 +17,18 @@
         <SwitchPreference
             android:key="fuck_40x"
             android:title="阻止服务端响应 40x 码"
-            android:summary="启用此开关后，将可以：\n拦截 401 码强制登出账号\n强制浏览已封禁账号的资料卡\n评论接口检测\n其他作用\n现在不再弹出 Toast 提示" />
+            android:summary="拦截 401 码强制登出账号\n强制浏览已封禁账号的资料卡\n评论接口检测\n获得调试信息？" />
         
         <SwitchPreference
             android:key="no_records"
             android:title="不要追踪我"
             android:summary="启用后，模块将会拦截 CodeMaoStat.recordEvent(str, map) 调用（比如点击创作按钮都会发送一个 collect 请求），风险未知" />
+        
+        
+        <SwitchPreference
+            android:key="fuck_update"
+            android:title="屏蔽更新"
+            android:summary="此功能会让整个更新功能不可用，若已经收到更新提示请先清理 shared_prefs 才可完全生效" />
         
         <SwitchPreference
             android:key="fuck_no_proxy"
