@@ -2,6 +2,10 @@
 
 弥补 编程猫Nemo/点个猫 的不合理特性，功能增强等特性(｡･ω･｡)
 
+### For non-Chinese users
+
+This project is for Codemao Nemo. Unless you're depend on it, you needn't to use this Xposed module.
+
 ### 使用
 
 0. 建议点个猫版本为 4.3.4，已安装 LSPosed 框架(由于使用了 XSharedPreferences，故免 Root 的 Xposed 框架貌似无法正常运作)
