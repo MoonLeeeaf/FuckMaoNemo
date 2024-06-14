@@ -4,7 +4,7 @@
 
 ### For non-Chinese users
 
-This project is for Codemao Nemo. Unless you're depend on it, you needn't to use this Xposed module.
+This project is for Codemao Nemo. Most of the time, you needn't use this Xposed module.
 
 ### 使用
 
