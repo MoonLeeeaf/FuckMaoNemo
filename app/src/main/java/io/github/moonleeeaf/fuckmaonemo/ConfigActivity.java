@@ -31,6 +31,15 @@ public class ConfigActivity extends PreferenceActivity {
                 
             return false;
         });
+        
+        findPreference("see_miao").setOnPreferenceClickListener((p) -> {
+            new AlertDialog.Builder(this)
+                .setTitle("屏蔽词列表")
+                .setMessage("当期列表：\n" + Hook.MIAO_LIST)
+                .show();
+                
+            return false;
+        });
     }
     
 }

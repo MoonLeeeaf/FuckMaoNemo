@@ -28,12 +28,31 @@
         <SwitchPreference
             android:key="fuck_update"
             android:title="屏蔽更新"
-            android:summary="主页不会弹更新对话框" />
+            android:summary="主页不会弹更新对话框，不会拦截设置里手动查看的更新" />
         
         <SwitchPreference
             android:key="fuck_no_proxy"
             android:title="反防抓包"
-            android:summary="效果不太明显，目前只能发现账号相关的有反防抓包" />
+            android:summary="目前只发现账号相关的有反防抓包，真无法抓包就去刷原生安卓吧，亲测有效" />
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="评论">
+        
+        <SwitchPreference
+            android:key="force_top_comment"
+            android:title="强制置顶评论"
+            android:summary="灵感来源于 CodeCat，可以无视作品作者直接置顶评论（注意：只支持 Nemo 作品，其它无效响应406码！）" />
+        
+        <SwitchPreference
+            android:key="fuck_miao"
+            android:title="别屏蔽我词语！"
+            android:summary="让部分屏蔽词无法再被屏蔽，请勿用于恶语相向，否则被举报不要来找我！！\n可能会导致缩短评论字数上限，算法有待优化" />
+        
+        <Preference
+            android:key="see_miao"
+            android:title="查看支持防屏蔽的词汇"
+            android:summary="对应上面的 防屏蔽" />
         
     </PreferenceCategory>
     
@@ -42,15 +61,20 @@
          <SwitchPreference
             android:key="fuck_fcm"
             android:title="绕过防沉迷"
-            android:summary="滞空防沉迷检测方法的调用实现无伤速通破解防沉迷，无需 Player 链接" />
+            android:summary="滞空防沉迷检测方法的调用实现无伤速通破解防沉迷，无需 Player 链接，不支持叽叽猫砸进里面的岛3，不支持内嵌社区网页的防沉迷，那不属于我的能力范围" />
     
+         <SwitchPreference
+            android:key="force_set_work_myown"
+            android:title="谋权篡位"
+            android:summary="伪装任意作品是你自己的，可以：\n直接编辑作品源码\n其他用途" />
+        
     </PreferenceCategory>
     
-    <PreferenceCategory android:title="已弃用">
+    <PreferenceCategory android:title="实验">
          <SwitchPreference
             android:key="force_show_rework"
             android:title="强制显示再创作图标"
-            android:summary="使作品的 再创作 按钮永远显示，即使作品并未设置为开放源代码（显示了也没啥用，服务端给你拦截了：作品未开源）" />
+            android:summary="使作品的 再创作 按钮永远显示，即使作品并未设置为开放源代码（显示了也没啥用，服务端给你拦截了，报错信息为 作品未开源，亲测无效）" />
         
     </PreferenceCategory>
 </PreferenceScreen>

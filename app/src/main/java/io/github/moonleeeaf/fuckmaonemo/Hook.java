@@ -24,6 +24,11 @@ public class Hook implements IXposedHookLoadPackage {
     private int nohengheng;
     private int aaaa;
     
+    public static final String MIAO_LIST = "妈 马 操 草 傻 艹 牛 逼 P 槽 涩 色 m";
+    public static final String[] MIAO = MIAO_LIST.split(" ");
+    
+    private XC_MethodHook.Unhook force_set_work_myown_unhook;
+    
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam param) throws Throwable {
         if ("com.codemao.nemo".equals(param.packageName)) {
@@ -51,6 +56,13 @@ public class Hook implements IXposedHookLoadPackage {
    
     public Application getApplication() throws ClassNotFoundException {
         return (Application) XposedHelpers.callStaticMethod(Class.forName("android.app.ActivityThread"), "currentApplication");
+    }
+    
+    public static String fuck屏蔽词(String str) {
+        for (String i : MIAO) {
+            str = str.replaceAll(i, "‌" + i + "‌");
+        }
+        return str;
     }
     
     public void hook(XC_LoadPackage.LoadPackageParam param) throws Exception {
@@ -161,6 +173,96 @@ public class Hook implements IXposedHookLoadPackage {
                     Context.class,
                     Intent.class
                 )
+            );
+        });
+        
+        // 强制置顶评论
+        load("force_top_comment", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_强制置顶评论");
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.view.CommentOptionDialogV2", classLoader),
+                    "checkIsSelf",
+                    null
+                ),
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam mp) throws Throwable {
+                        XposedHelpers.setBooleanField(mp.thisObject, "isOwnWork", true);
+                    }
+                }
+            );
+        });
+        
+        // 谋权篡位
+        load("force_set_work_myown", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_谋权篡位");
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.activity.WorkDetailActivity", classLoader),
+                    "setWorkDetailData",
+                    null
+                ),
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam mp) throws Throwable {
+                        force_set_work_myown_unhook = XposedBridge.hookMethod(
+                        getMethod(
+                            XposedHelpers.findClass("com.codemao.creativecenter.utils.bcm.bean.AuthorInfo", classLoader),
+                            "getId",
+                            null
+                        ),
+                        new XC_MethodReplacement() {
+                            @Override
+                            protected Object replaceHookedMethod(MethodHookParam hp) throws Throwable {
+                                Method m = getMethod(XposedHelpers.findClass("com.codemao.nemo.util.LocalUserHelper", classLoader), "getUserInfo", null);
+                                m.setAccessible(true);
+                                Object usrInfo = m.invoke(null, null);
+                                        
+                                m = getMethod(usrInfo.getClass(), "getId", null);
+                                m.setAccessible(true);
+                                        
+                                force_set_work_myown_unhook.unhook(); // 希望人没事
+                                return m.invoke(usrInfo, null); // long 类型
+                            }
+                        });
+                    }
+                }
+            );
+        });
+        
+        // 防止屏蔽屏蔽词
+        load("fuck_miao", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_反屏蔽");
+            XC_MethodHook hook = new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam mp) throws Throwable {
+                    XposedHelpers.setObjectField(mp.thisObject, "content", fuck屏蔽词((String) XposedHelpers.getObjectField(mp.thisObject, "content")));
+                }
+            };
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.fragment.WorkCommentFragment", classLoader),
+                    "sendReply",
+                    null
+                ),
+                hook
+            );
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.fragment.WorkCommentFragment", classLoader),
+                    "sendComment",
+                    null
+                ),
+                hook
+            );
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.activity.CommentDetailActivity", classLoader),
+                    "send",
+                    null
+                ),
+                hook
             );
         });
         
