@@ -9,7 +9,12 @@
         <Preference
             android:title="作者"
             android:summary="编程猫 @满月叶\nGitHub @MoonLeeeaf\n喵呜~" />
-    
+        
+         <SwitchPreference
+            android:key="force_enable"
+            android:title="强制启用"
+            android:summary="如果你正在使用基于官方 Nemo 修改的客户端，那么可以打开此选项(记得配置模块作用域哦)" />
+   
     </PreferenceCategory>
     
     <PreferenceCategory android:title="网络">
@@ -68,9 +73,30 @@
             android:title="谋权篡位"
             android:summary="伪装任意作品是你自己的，可以：\n直接编辑作品源码\n其他用途" />
         
+        <SwitchPreference
+            android:key="fuck_box3recommend"
+            android:title="岛3我推荐你吗"
+            android:summary="机吧猫砸进里面的玩意实际上还不如去研究如何优化 Nemo 客户端，打开后主页将没有四个岛三作品引流\n提示：还没修好，等我修修，不然你会进不去主页的哦" />
+        
+        <SwitchPreference
+            android:key="work_is_valid"
+            android:title="作品没有失效"
+            android:summary="让作品的发布时间大于0，可以绕过收藏作品的“失效”状态" />
+        
+        <SwitchPreference
+            android:key="fix_kn_player"
+            android:title="修复 KN 作品无法打开"
+            android:summary="去你吗的Nemo推广(UA检测)，去你妈的 ?is_nemo_player 害得我无法打开，我直接把它机吧割了，QSWL\n本功能仅需要时启用，5.0.0用户请不要启用" />
+        
     </PreferenceCategory>
     
     <PreferenceCategory android:title="实验">
+        
+        <SwitchPreference
+            android:key="test"
+            android:title="未命名实验功能"
+            android:summary="实验" />
+        
          <SwitchPreference
             android:key="force_show_rework"
             android:title="强制显示再创作图标"

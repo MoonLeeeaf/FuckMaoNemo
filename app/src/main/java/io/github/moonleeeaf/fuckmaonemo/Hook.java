@@ -3,7 +3,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.content.res.loader.AssetsProvider;
 import android.os.Bundle;
+import android.util.Pair;
 import android.widget.Toast;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -14,7 +17,10 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import java.lang.reflect.Method;
 import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Hook implements IXposedHookLoadPackage {
@@ -24,14 +30,24 @@ public class Hook implements IXposedHookLoadPackage {
     private int nohengheng;
     private int aaaa;
     
-    public static final String MIAO_LIST = "妈 马 操 草 傻 艹 牛 逼 P 槽 涩 色 m";
-    public static final String[] MIAO = MIAO_LIST.split(" ");
+    public static String MIAO_LIST;
+    public static String[][] MIAO;
     
     private XC_MethodHook.Unhook force_set_work_myown_unhook;
     
+    private static String[][] demo(String[] array, String split) {
+        ArrayList<String[]> ls = new ArrayList<>();
+        for (String i : array) {
+            String[] b = i.split(split);
+            ls.add(new String[] {b[0], b[1]});
+        }
+        return ls.toArray(new String[][]{});
+    }
+    
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam param) throws Throwable {
-        if ("com.codemao.nemo".equals(param.packageName)) {
+        xsp = new XSharedPreferences("io.github.moonleeeaf.fuckmaonemo", "config");
+        if ("com.codemao.nemo".equals(param.packageName) || xsp.getBoolean("force_enable", false)) {
             XposedBridge.log("[FuckMaoNemo] 开始注入...");
             // 感谢 安宁 提供取加固程序的 ClassLoader 的代码
             XposedBridge.hookAllMethods(
@@ -58,11 +74,16 @@ public class Hook implements IXposedHookLoadPackage {
         return (Application) XposedHelpers.callStaticMethod(Class.forName("android.app.ActivityThread"), "currentApplication");
     }
     
-    public static String fuck屏蔽词(String str) {
-        for (String i : MIAO) {
-            str = str.replaceAll(i, "‌" + i + "‌");
+    public static Pair<String, String> fuck屏蔽词(String str) {
+        String after = str;
+        String a = "";
+        for (String[] i : MIAO) {
+            after = str.replaceAll(i[0], i[1]);
+            if (!after.equals(str))
+                a += i[0];
+            str = after;
         }
-        return str;
+        return new Pair<>(str, a);
     }
     
     public void hook(XC_LoadPackage.LoadPackageParam param) throws Exception {
@@ -71,9 +92,7 @@ public class Hook implements IXposedHookLoadPackage {
         
         nohengheng = 0;
         aaaa = 0;
-        
-        xsp = new XSharedPreferences("io.github.moonleeeaf.fuckmaonemo", "config");
-        
+
         XposedBridge.log("[FuckMaoNemo] 注入中...");
         
         // 拦截40x码
@@ -111,6 +130,16 @@ public class Hook implements IXposedHookLoadPackage {
             );
         });
         
+        load("test", () -> {
+            methodToVoid(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.bean.AuthorInfo", classLoader),
+                    "setFork_user",
+                    boolean.class
+                )
+            );
+        });
+        
         // 绕过防沉迷
         load("fuck_fcm", () -> {
             XposedBridge.log("[FuckMaoNemo] Hook_绕过防沉迷");
@@ -119,6 +148,82 @@ public class Hook implements IXposedHookLoadPackage {
                 "checkAntiAddictionState",
                 null
             ));
+        });
+        
+        // 修复KN作品播放
+        load("fix_kn_player", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_修复KN作品播放");
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.view.X5DWebView", classLoader),
+                    "loadUrl",
+                    String.class
+                ),
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam mp) throws Throwable {
+                        String url = (String) mp.args[0];
+                        if (url != null && url.contains("kn.codemao.cn"))
+                            url = url.substring(0, url.lastIndexOf("?")) + "&is_nemo_player=true";
+                        mp.args[0] = url;
+                        XposedBridge.log("KN作品替换链接：" + url);
+                    }
+                }
+            );
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.creativestore.dsbridge.DWebView", classLoader),
+                    "loadUrl",
+                    String.class
+                ),
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam mp) throws Throwable {
+                        String url = (String) mp.args[0];
+                        if (url != null && url.contains("kn.codemao.cn"))
+                            url =  url.substring(0, url.lastIndexOf("?")) + "&is_nemo_player=true";
+                        mp.args[0] = url;
+                        XposedBridge.log("KN作品替换链接：" + url);
+                    }
+                }
+            );
+        });
+        
+        // 作品没有失效
+        load("work_is_valid", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_作品没有失效");
+            XposedBridge.hookMethod(getMethod(
+                XposedHelpers.findClass("com.codemao.nemo.bean.CollectWorkInfo", classLoader),
+                "getPublish_time",
+                null
+            ),new XC_MethodReplacement() {
+                @Override
+                protected Object replaceHookedMethod(MethodHookParam mp) throws Throwable {
+                    long time = XposedHelpers.getLongField(mp.thisObject, "publish_time");
+                    if (time <= 0)
+                        time = 114514;
+                    return time;
+                }
+            });
+        });
+        
+        // 岛3我推荐你吗
+        load("fuck_box3recommend", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_岛3我推荐你吗");
+                
+            Object mgr = XposedHelpers.findClass("com.giu.xzz.http.RetrofitManager",classLoader).getDeclaredMethod("get", null).invoke(null, null);
+            Object example = mgr.getClass().getDeclaredMethod("create", new Class[] { Class.class }).invoke(mgr, XposedHelpers.findClass("com.codemao.nemo.retrofit.api.DiscoveryService", classLoader));
+                
+            XposedBridge.hookAllMethods(
+                example.getClass(),
+                "getRecommendBoxData",
+                new XC_MethodReplacement() {
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam mp) throws Throwable {
+                        return XposedHelpers.findClass("io.reactivex.Observable", classLoader).getConstructor(null).newInstance(null);
+                    }
+                }
+            );
         });
         
         // 强制显示再创作按钮
@@ -234,10 +339,18 @@ public class Hook implements IXposedHookLoadPackage {
         // 防止屏蔽屏蔽词
         load("fuck_miao", () -> {
             XposedBridge.log("[FuckMaoNemo] Hook_反屏蔽");
+                
+            MIAO_LIST = xsp.getString("MIAO_LIST_SHARED", null);
+                
+            MIAO = demo(MIAO_LIST.split("\n"), " ");
+                
             XC_MethodHook hook = new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam mp) throws Throwable {
-                    XposedHelpers.setObjectField(mp.thisObject, "content", fuck屏蔽词((String) XposedHelpers.getObjectField(mp.thisObject, "content")));
+                    Pair<String, String> sb = fuck屏蔽词((String) XposedHelpers.getObjectField(mp.thisObject, "content"));
+                    XposedHelpers.setObjectField(mp.thisObject, "content", sb.first);
+                    if (!"".equals(sb.second))
+                        Toast.makeText(getApplication(), "[FuckMaoNemo] 发送内容已尝试防止屏蔽下列字符词语:" + sb.second, Toast.LENGTH_LONG).show();
                 }
             };
             XposedBridge.hookMethod(

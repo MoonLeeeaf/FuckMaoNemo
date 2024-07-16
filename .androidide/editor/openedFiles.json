@@ -4,14 +4,14 @@
       "file": "/storage/emulated/0/MoonLeaf/Projects/FuckMaoNemo/app/src/main/java/io/github/moonleeeaf/fuckmaonemo/Hook.java",
       "selection": {
         "end": {
-          "column": 59,
-          "index": 9189,
-          "line": 224
+          "column": 17,
+          "index": 6820,
+          "line": 170
         },
         "start": {
-          "column": 59,
-          "index": 9189,
-          "line": 224
+          "column": 17,
+          "index": 6820,
+          "line": 170
         }
       }
     },
@@ -19,14 +19,14 @@
       "file": "/storage/emulated/0/MoonLeaf/Projects/FuckMaoNemo/app/src/main/res/xml/config.xml",
       "selection": {
         "end": {
-          "column": 0,
-          "index": 0,
-          "line": 0
+          "column": 66,
+          "index": 3096,
+          "line": 88
         },
         "start": {
-          "column": 0,
-          "index": 0,
-          "line": 0
+          "column": 52,
+          "index": 3082,
+          "line": 88
         }
       }
     }

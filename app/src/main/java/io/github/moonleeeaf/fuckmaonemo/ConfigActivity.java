@@ -8,7 +8,9 @@ import android.preference.PreferenceManager;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.Toolbar;
+import java.io.FileOutputStream;
 
 public class ConfigActivity extends PreferenceActivity {
    
@@ -35,11 +37,19 @@ public class ConfigActivity extends PreferenceActivity {
         findPreference("see_miao").setOnPreferenceClickListener((p) -> {
             new AlertDialog.Builder(this)
                 .setTitle("屏蔽词列表")
-                .setMessage("当期列表：\n" + Hook.MIAO_LIST)
+                .setMessage("当期列表：\n" + getPreferenceManager().getSharedPreferences().getString("MIAO_LIST_SHARED", "获取失败！"))
                 .show();
                 
             return false;
         });
+        
+        try {
+            FileOutputStream fos = openFileOutput("fuck_miao.txt", MODE_WORLD_READABLE);
+            String s = new String(getAssets().open("屏蔽词.txt").readAllBytes());
+            getPreferenceManager().getSharedPreferences().edit().putString("MIAO_LIST_SHARED", s).apply();
+        } catch(Exception e) {
+            Toast.makeText(this, "更新屏蔽词列表失败！" + e, Toast.LENGTH_LONG).show();
+        }
     }
     
 }
