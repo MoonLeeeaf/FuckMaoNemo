@@ -1,12 +1,12 @@
+## 停更
+
+本人已离开 编程猫 社区，本模块停止开发，感谢各位朋友的支持与陪伴，有需求的可以Fork下来进行二次开发，谢谢❤️
+
 ## FuckMaoNemo
 
 弥补 编程猫Nemo/点个猫 的不合理特性，功能增强等特性(｡･ω･｡)
 
 提示:本项目只在 G‍i‍t‍H‍u‍b 存在, **严禁任何人或任何组织在没有得到我的书面许可、公告明示许可及社交账号发帖许可的情况下照搬本仓库** <!-- GitCode, 说的就是你, 到时候如果被我发现你搬我仓库我迟早要找你算账 -->
-
-### For non-Chinese users
-
-This project is for Codemao Nemo. Most of the time, you needn't use this Xposed module.
 
 ### 使用
 
