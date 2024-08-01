@@ -86,7 +86,16 @@
         <SwitchPreference
             android:key="fix_kn_player"
             android:title="修复 KN 作品无法打开"
-            android:summary="去你吗的Nemo推广(UA检测)，去你妈的 ?is_nemo_player 害得我无法打开，我直接把它机吧割了，QSWL\n本功能仅需要时启用，5.0.0用户请不要启用" />
+            android:summary="去你吗的Nemo推广(UA检测)，去你妈的 “?is_nemo_player” 害得我无法打开，我直接把它机吧割了，QSWL\n本功能仅需要时启用，5.0.0用户请不要启用" />
+        
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="实验">
+    
+        <SwitchPreference
+            android:key="remove_edit_desc_filter"
+            android:title="我就要个人信息换行"
+            android:summary="删除个人简介编辑页面的过滤器以达到不过滤换行符号的目的（注意：暂时不能手动输入，暂时用复制粘贴换行符来替代）" />
         
     </PreferenceCategory>
     
@@ -94,8 +103,8 @@
         
         <SwitchPreference
             android:key="test"
-            android:title="未命名实验功能"
-            android:summary="实验" />
+            android:title="Unnamed Feature"
+            android:summary="setFork_user(B)V" />
         
          <SwitchPreference
             android:key="force_show_rework"

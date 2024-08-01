@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.loader.AssetsProvider;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Pair;
+import android.widget.EditText;
 import android.widget.Toast;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -184,6 +187,25 @@ public class Hook implements IXposedHookLoadPackage {
                             url =  url.substring(0, url.lastIndexOf("?")) + "&is_nemo_player=true";
                         mp.args[0] = url;
                         XposedBridge.log("KN作品替换链接：" + url);
+                    }
+                }
+            );
+        });
+        
+        // 我就要个人信息换行
+        load("remove_edit_desc_filter", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_我就要个人信息换行");
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.activity.UserNameDesEditActivity", classLoader),
+                    "initView",
+                    null
+                ),
+                new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam mp) throws Throwable {
+                        EditText e = (EditText) XposedHelpers.getObjectField(mp.thisObject, "editText");
+                        e.setFilters(new InputFilter[]{});
                     }
                 }
             );
