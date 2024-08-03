@@ -8,12 +8,22 @@
         
         <Preference
             android:title="作者"
-            android:summary="编程猫 @满月叶\nGitHub @MoonLeeeaf\n喵呜~" />
+            android:summary="编程猫 @满月叶\nGitHub @MoonLeeeaf\nBiliBili @静之彼端\n喵呜~" />
+        
+        <Preference
+            android:title="提示"
+            android:summary="目前只支持 LSPosed\n其他暂未测试\n更改功能后重启生效" />
         
          <SwitchPreference
             android:key="force_enable"
-            android:title="强制启用"
+            android:title="非官方客户端"
             android:summary="如果你正在使用基于官方 Nemo 修改的客户端，那么可以打开此选项(记得配置模块作用域哦)" />
+        
+        <SwitchPreference
+            android:key="inject_settings_button"
+            android:title="注入设置菜单"
+            android:summary="字面意思"
+            android:defaultValue="true" />
    
     </PreferenceCategory>
     

@@ -1,6 +1,8 @@
 package io.github.moonleeeaf.fuckmaonemo;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -9,7 +11,10 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -97,6 +102,46 @@ public class Hook implements IXposedHookLoadPackage {
         aaaa = 0;
 
         XposedBridge.log("[FuckMaoNemo] 注入中...");
+        
+        // 劫持设置按钮的点击事件
+        load("inject_settings_button", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_注入设置菜单");
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.fragment.MineFragment", classLoader),
+                    "onClick",
+                    View.class
+                ),
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam mp) throws Throwable {
+                        View v = (View) mp.args[0];
+                        if (v.getId() == 2131297099)
+                            v.setId(11451419);
+                    }
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam mp) throws Throwable {
+                        View v = (View) mp.args[0];
+                        Context c = v.getContext();
+                        if (v.getId() == 11451419) {
+                            PopupMenu pop = new PopupMenu(c, v);
+                            Menu m = pop.getMenu();
+                            m.add("Nemo设置").setOnMenuItemClickListener((mm) -> {
+                                c.startActivity(new Intent(c, XposedHelpers.findClass("com.codemao.nemo.activity.SettingActivity", classLoader)));
+                                return false;
+                            });
+                            m.add("模块设置").setOnMenuItemClickListener((mm) -> {
+                                c.startActivity(new Intent().setComponent(new ComponentName("io.github.moonleeeaf.fuckmaonemo", ConfigActivity.class.getName())));
+                                return false;
+                            });
+                            pop.show();
+                        
+                            mp.setResult(null);
+                        }
+                    }
+                }
+            );
+        }, true);
         
         // 拦截40x码
         load("fuck_40x", () -> {
@@ -420,7 +465,11 @@ public class Hook implements IXposedHookLoadPackage {
     }
     
     public void load(String pref, Callback cb) {
-        if (xsp.getBoolean(pref, false)) {
+        load(pref, cb ,false);
+    }
+    
+    public void load(String pref, Callback cb, boolean def) {
+        if (xsp.getBoolean(pref, def)) {
             try {
                 cb.onCallback();
                 nohengheng++;
