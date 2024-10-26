@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.loader.AssetsProvider;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -23,6 +24,7 @@ import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.Proxy;
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Hook implements IXposedHookLoadPackage {
     private static boolean isHooked = false;
@@ -134,6 +137,21 @@ public class Hook implements IXposedHookLoadPackage {
                                 c.startActivity(new Intent().setComponent(new ComponentName("io.github.moonleeeaf.fuckmaonemo", ConfigActivity.class.getName())));
                                 return false;
                             });
+                            m.add("打开内置浏览器").setOnMenuItemClickListener((mm) -> {
+                                EditText edit = new EditText(c);
+                                new AlertDialog.Builder(c)
+                                    .setTitle("打开内置浏览器")
+                                    .setIcon(android.R.drawable.ic_dialog_info)
+                                    .setView(edit)
+                                    .setPositiveButton("打开", (d, w) -> {
+                                        c.startActivity(new Intent().setData(Uri.parse("nemo://com.codemao.nemo/openwith?type=5&url=" + edit.getText())));
+                                    })
+                                    .setNegativeButton("取消", (d, w) -> {})
+                                    .create()
+                                    .show();
+                                    
+                                return false;
+                            });
                             pop.show();
                         
                             mp.setResult(null);
@@ -196,6 +214,64 @@ public class Hook implements IXposedHookLoadPackage {
                 "checkAntiAddictionState",
                 null
             ));
+        });
+        
+         // 最新作品过滤
+        load("newest_works_filter", () -> {
+            XposedBridge.log("[FuckMaoNemo] Hook_最新作品过滤");
+                
+            final String[] rules = xsp.getString("newest_works_filter_rule_shared", "userId 823651139").split("\n");
+            
+            final ArrayList<NewestWorksFilter> filters = new ArrayList<NewestWorksFilter>();
+                
+            for (String s : rules) {
+                String type = s.split(" ")[0];
+                String value = s.split(" ")[1];
+                
+                NewestWorksFilter nwf = new NewestWorksFilter(type, value);
+                
+                filters.add(nwf);
+            }
+                
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.bean.LatestWorks", classLoader),
+                    "getItems",
+                    null
+                ),
+                new XC_MethodReplacement() {
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam mp) throws Throwable {
+                        List ls = (List) XposedHelpers.getObjectField(mp.thisObject, "items");
+                        
+                        ArrayList al = new ArrayList();
+                            
+                        for (Object o : ls) {
+                            String workName = (String) XposedHelpers.getObjectField(o, "work_name");
+                            String userId = "" + XposedHelpers.getLongField(o, "user_id");
+                            
+                            boolean disadd = false;
+                                
+                            for (NewestWorksFilter filter : filters) {
+                                if (filter.matches(userId, workName)) {
+                                    disadd = true;
+                                    break;
+                                }
+                            }
+                                
+                            if (disadd) {
+                                XposedBridge.log("[FuckMaoNemo] 过滤用户 " + userId + " 的作品 " + workName);
+                                
+                                continue;
+                            }
+                            
+                            al.add(o);
+                        }
+                            
+                        return al;
+                    }
+                }
+            );
         });
         
         // 修复KN作品播放
@@ -278,19 +354,64 @@ public class Hook implements IXposedHookLoadPackage {
         load("fuck_box3recommend", () -> {
             XposedBridge.log("[FuckMaoNemo] Hook_岛3我推荐你吗");
                 
-            Object mgr = XposedHelpers.findClass("com.giu.xzz.http.RetrofitManager",classLoader).getDeclaredMethod("get", null).invoke(null, null);
-            Object example = mgr.getClass().getDeclaredMethod("create", new Class[] { Class.class }).invoke(mgr, XposedHelpers.findClass("com.codemao.nemo.retrofit.api.DiscoveryService", classLoader));
-                
-            XposedBridge.hookAllMethods(
-                example.getClass(),
-                "getRecommendBoxData",
-                new XC_MethodReplacement() {
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("retrofit2.Retrofit$1", classLoader),
+                    "invoke",
+                    new Class[] {
+                        Object.class,
+                        Method.class,
+                        Object[].class
+                    }
+                ),
+                new XC_MethodHook() {
                     @Override
-                    protected Object replaceHookedMethod(MethodHookParam mp) throws Throwable {
-                        return XposedHelpers.findClass("io.reactivex.Observable", classLoader).getConstructor(null).newInstance(null);
+                    protected void beforeHookedMethod(MethodHookParam mp) throws Throwable {
+                        switch (((Method) mp.args[1]).getName()) {
+                            case "getRecommendBoxData":
+                                mp.setResult(XposedHelpers.callMethod(mp.args[0], "getRecommendPageData", new Object[] {}));
+                                break;
+                        }
                     }
                 }
             );
+                
+            /*
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.giu.xzz.http.RetrofitManager",classLoader),
+                    "create",
+                    Class.class
+                ),
+                new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam mp) throws Throwable {
+                        Object s = mp.getResult();
+                            
+                        XposedBridge.hookAllMethods(
+                            s.getClass(),
+                            "getRecommendBoxData",
+                            new XC_MethodReplacement() {
+                                @Override
+                                protected Object replaceHookedMethod(MethodHookParam arg0) throws Throwable {
+                                    InvocationHandler handler = new InvocationHandler() {
+                                        @Override
+                                        public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
+                                            return null;
+                                        }
+                                    }
+                                    return java.lang.reflect.Proxy.newProxyInstance(
+                                        classLoader,
+                                        new Class[] { XposedHelpers.findClass("io.reactivex.Observable", classLoader) },
+                                        hanlder
+                                    );
+                                }
+                            }
+                        );
+                    }
+                }
+            );
+            */
         });
         
         // 强制显示再创作按钮
@@ -478,6 +599,27 @@ public class Hook implements IXposedHookLoadPackage {
                 aaaa++;
             }
         }
+    }
+    
+    public static class NewestWorksFilter {
+        private String type;
+        private String value;
+        
+        public NewestWorksFilter(String type, String value) {
+            this.type = type;
+            this.value = value;
+        }
+        
+        public boolean matches(String userId, String workName) {
+            if ("workName".equals(this.type)) {
+                return Pattern.matches(value, workName);
+            } else if ("userId".equals(this.type)) {
+                return userId.equals(value);
+            }
+            
+            return false;
+        }
+        
     }
     
 }

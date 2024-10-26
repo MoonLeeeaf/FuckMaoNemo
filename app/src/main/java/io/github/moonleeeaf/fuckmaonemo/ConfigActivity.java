@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -38,6 +39,23 @@ public class ConfigActivity extends PreferenceActivity {
             new AlertDialog.Builder(this)
                 .setTitle("屏蔽词列表")
                 .setMessage("当期列表：\n" + getPreferenceManager().getSharedPreferences().getString("MIAO_LIST_SHARED", "获取失败！"))
+                .show();
+                
+            return false;
+        });
+        
+        findPreference("set_newest_works_filter").setOnPreferenceClickListener((p) -> {
+            EditText edit = new EditText(this);
+                
+            edit.setText(getPreferenceManager().getSharedPreferences().getString("newest_works_filter_rule_shared", "userId 823651139"));
+                
+            new AlertDialog.Builder(this)
+                .setTitle("最新作品过滤规则")
+                .setView(edit)
+                .setPositiveButton("保存", (d, w) -> {
+                    getPreferenceManager().getSharedPreferences().edit().putString("newest_works_filter_rule_shared", edit.getText().toString()).apply();
+                })
+                .setNegativeButton("取消", (d, w) -> {})
                 .show();
                 
             return false;

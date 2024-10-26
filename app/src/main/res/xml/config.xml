@@ -77,6 +77,16 @@
             android:key="fuck_fcm"
             android:title="绕过防沉迷"
             android:summary="滞空防沉迷检测方法的调用实现无伤速通破解防沉迷，无需 Player 链接，不支持叽叽猫砸进里面的岛3，不支持内嵌社区网页的防沉迷，那不属于我的能力范围" />
+        
+        <SwitchPreference
+            android:key="newest_works_filter"
+            android:title="最新作品过滤"
+            android:summary="发你吗个逼的广告这他妈谁看你那臭几把玩意 欢迎殴打我手机号 15675696451" />
+        
+        <Preference
+            android:key="set_newest_works_filter"
+            android:title="最新作品过滤列表"
+            android:summary="可以对上面功能进行配置 支持使用作品名称 用户ID等过滤" />
     
          <SwitchPreference
             android:key="force_set_work_myown"
