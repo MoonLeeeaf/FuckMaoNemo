@@ -4,62 +4,17 @@
       "file": "/storage/emulated/0/MoonLeaf/Projects/FuckMaoNemo/app/src/main/java/io/github/moonleeeaf/fuckmaonemo/Hook.java",
       "selection": {
         "end": {
-          "column": 101,
-          "index": 9409,
-          "line": 222
+          "column": 34,
+          "index": 10304,
+          "line": 244
         },
         "start": {
-          "column": 101,
-          "index": 9409,
-          "line": 222
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/MoonLeaf/Projects/FuckMaoNemo/app/build.gradle",
-      "selection": {
-        "end": {
-          "column": 22,
-          "index": 272,
-          "line": 14
-        },
-        "start": {
-          "column": 22,
-          "index": 272,
-          "line": 14
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/MoonLeaf/Projects/FuckMaoNemo/app/src/main/java/io/github/moonleeeaf/fuckmaonemo/ConfigActivity.java",
-      "selection": {
-        "end": {
-          "column": 8,
-          "index": 2261,
-          "line": 57
-        },
-        "start": {
-          "column": 8,
-          "index": 2261,
-          "line": 57
-        }
-      }
-    },
-    {
-      "file": "/storage/emulated/0/MoonLeaf/Projects/FuckMaoNemo/app/src/main/res/xml/config.xml",
-      "selection": {
-        "end": {
-          "column": 48,
-          "index": 2950,
-          "line": 86
-        },
-        "start": {
-          "column": 25,
-          "index": 2927,
-          "line": 86
+          "column": 34,
+          "index": 10304,
+          "line": 244
         }
       }
     }
   ],
-  "selectedFile": "/storage/emulated/0/MoonLeaf/Projects/FuckMaoNemo/app/src/main/java/io/github/moonleeeaf/fuckmaonemo/ConfigActivity.java"
+  "selectedFile": "/storage/emulated/0/MoonLeaf/Projects/FuckMaoNemo/app/src/main/java/io/github/moonleeeaf/fuckmaonemo/Hook.java"
 }

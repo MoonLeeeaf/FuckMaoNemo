@@ -232,19 +232,36 @@ public class Hook implements IXposedHookLoadPackage {
                 
                 filters.add(nwf);
             }
+            
+            XposedBridge.hookMethod(
+                getMethod(
+                    XposedHelpers.findClass("com.codemao.nemo.bean.LatestWorks", classLoader),
+                    "getLimit",
+                    null //List.class
+                ),
+                new XC_MethodReplacement() {
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam mp) throws Throwable {
+                        return 100;
+                    }
+                }
+            );
+                
                 
             XposedBridge.hookMethod(
                 getMethod(
                     XposedHelpers.findClass("com.codemao.nemo.bean.LatestWorks", classLoader),
                     "getItems",
-                    null
+                    null //List.class
                 ),
                 new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam mp) throws Throwable {
-                        List ls = (List) XposedHelpers.getObjectField(mp.thisObject, "items");
+                        List ls = (List) XposedHelpers.getObjectField(mp.thisObject, "items"); // mp.args[0]; // 
                         
                         ArrayList al = new ArrayList();
+                            
+                        int passed = 0;
                             
                         for (Object o : ls) {
                             String workName = (String) XposedHelpers.getObjectField(o, "work_name");
@@ -255,6 +272,7 @@ public class Hook implements IXposedHookLoadPackage {
                             for (NewestWorksFilter filter : filters) {
                                 if (filter.matches(userId, workName)) {
                                     disadd = true;
+                                    passed++;
                                     break;
                                 }
                             }
@@ -268,7 +286,18 @@ public class Hook implements IXposedHookLoadPackage {
                             al.add(o);
                         }
                             
+                        // XposedHelpers.setObjectField(mp.thisObject, "items", al);
+                            
+                        int offset = XposedHelpers.getIntField(mp.thisObject, "offset");
+                        XposedHelpers.setIntField(mp.thisObject, "offset", offset + passed);
+                        
+                        int total = XposedHelpers.getIntField(mp.thisObject, "total");
+                        // XposedHelpers.setIntField(mp.thisObject, "total", total - passed);
+                            
+                        XposedBridge.log("[FuckMaoNemo] 过滤完毕 原数据: offset=" + offset + " total=" + total);
+                            
                         return al;
+                        // return null;
                     }
                 }
             );
